@@ -1931,27 +1931,220 @@ textarea.form-control {
 }
 
 /* ==========================================================================
-   Print Styles for Resume
+   Print Styles for Resume (Eliminates Blank Print, Full Fidelity Preview)
    ========================================================================== */
 @media print {
-  body * {
-    visibility: hidden;
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm 15mm 15mm;
   }
-  .resume-paper, .resume-paper * {
-    visibility: visible;
+
+  /* Reset body and html for clean print layout */
+  html,
+  body {
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    color: #1e293b !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 10pt !important;
+    line-height: 1.45 !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
-  .resume-paper {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    margin: 0;
-    padding: 20mm;
-    box-shadow: none;
-    border: none;
-  }
-  .modal-overlay, .navbar, .footer, .ambient-glow-1, .ambient-glow-2 {
+
+  /* Hide everything on page except the resume modal */
+  body > *:not(#resumeModal) {
     display: none !important;
+  }
+
+  /* Explicitly hide non-printable screen elements */
+  nav,
+  footer,
+  section,
+  .navbar,
+  .footer,
+  .hero-section,
+  .about-section,
+  .experience-section,
+  .skills-section,
+  .projects-section,
+  .education-section,
+  .certifications-section,
+  .terminal-section,
+  .contact-section,
+  .ambient-glow-1,
+  .ambient-glow-2,
+  .back-to-top,
+  .toast-box {
+    display: none !important;
+  }
+
+  /* Render resume modal cleanly as normal document content */
+  body > #resumeModal.modal-overlay {
+    display: block !important;
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    overflow: visible !important;
+    z-index: auto !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Modal window container reset */
+  #resumeModal .modal-window {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    background: #ffffff !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide modal header bar, close icon, and action buttons */
+  #resumeModal .modal-header,
+  #resumeModal .modal-actions,
+  #resumeModal .modal-close-btn {
+    display: none !important;
+  }
+
+  /* Modal scroll container reset */
+  #resumeModal .modal-content-scroll {
+    display: block !important;
+    position: static !important;
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Resume Paper sheet styling for print */
+  .resume-paper {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: #ffffff !important;
+    color: #1e293b !important;
+    visibility: visible !important;
+  }
+
+  .resume-paper * {
+    visibility: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .resume-paper h1 {
+    font-size: 1.6rem !important;
+    color: #0f172a !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 0.2rem !important;
+    text-align: center !important;
+  }
+
+  .resume-paper h2 {
+    font-size: 1.25rem !important;
+    color: #0284c7 !important;
+    margin-top: 0.2rem !important;
+    text-align: center !important;
+  }
+
+  .resume-contact-bar {
+    border-top: 1px solid #cbd5e1 !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+    padding: 0.4rem 0 !important;
+    margin-bottom: 1rem !important;
+    gap: 0.8rem !important;
+    justify-content: center !important;
+  }
+
+  .resume-contact-bar span {
+    color: #475569 !important;
+    font-size: 8.5pt !important;
+  }
+
+  .resume-contact-bar i {
+    color: #0284c7 !important;
+  }
+
+  /* Clean headings and sections */
+  .resume-section-title {
+    font-size: 10pt !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    border-bottom: 2px solid #0284c7 !important;
+    padding-bottom: 0.2rem !important;
+    margin-top: 0.85rem !important;
+    margin-bottom: 0.45rem !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Keep resume items intact across pages */
+  .resume-item {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .resume-item-header {
+    font-size: 9.5pt !important;
+    color: #1e293b !important;
+    font-weight: 700 !important;
+  }
+
+  .resume-item-sub {
+    font-size: 9pt !important;
+    color: #0284c7 !important;
+    font-weight: 600 !important;
+  }
+
+  .resume-bullets {
+    margin-top: 0.25rem !important;
+    padding-left: 1.1rem !important;
+  }
+
+  .resume-bullets li {
+    font-size: 8.5pt !important;
+    color: #334155 !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0.2rem !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 }
 
@@ -2029,5 +2222,35 @@ textarea.form-control {
   }
   .canva-orbit-ring {
     display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .modal-window {
+    max-height: 95vh;
+  }
+  .modal-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    position: relative;
+  }
+  .modal-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .modal-close-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+  }
+  .modal-content-scroll {
+    padding: 1rem;
+  }
+  .resume-paper {
+    padding: 1.5rem 1rem;
   }
 }

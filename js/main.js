@@ -366,46 +366,90 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 7. Resume Modal (Open, Close, Print)
+  // 7. Resume Modal (Open, Close, Print, Download PDF)
   // ==========================================
   const resumeModal = document.getElementById('resumeModal');
   const openResumeBtnNav = document.getElementById('openResumeBtnNav');
   const heroResumeBtn = document.getElementById('heroResumeBtn');
   const closeResumeModalBtn = document.getElementById('closeResumeModalBtn');
   const printResumeBtn = document.getElementById('printResumeBtn');
+  const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+  const resumePaperDoc = document.getElementById('resumePaperDoc');
 
   function openResume() {
+    if (!resumeModal) return;
     resumeModal.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
 
   function closeResume() {
+    if (!resumeModal) return;
     resumeModal.classList.remove('active');
     document.body.style.overflow = 'auto';
   }
 
   if (openResumeBtnNav) openResumeBtnNav.addEventListener('click', openResume);
-  if (heroResumeBtn) heroResumeBtn.addEventListener('click', openResume);
   if (closeResumeModalBtn) closeResumeModalBtn.addEventListener('click', closeResume);
 
+  // Hero Download Resume notification
+  if (heroResumeBtn) {
+    heroResumeBtn.addEventListener('click', () => {
+      showToast('Downloading Manish Kumar CV (PDF)...');
+    });
+  }
+
+  // Modal Download PDF notification
+  if (downloadPdfBtn) {
+    downloadPdfBtn.addEventListener('click', () => {
+      showToast('Downloading Manish Kumar CV (PDF)...');
+    });
+  }
+
   // Close on outside click
-  resumeModal.addEventListener('click', (e) => {
-    if (e.target === resumeModal) {
-      closeResume();
-    }
-  });
+  if (resumeModal) {
+    resumeModal.addEventListener('click', (e) => {
+      if (e.target === resumeModal) {
+        closeResume();
+      }
+    });
+  }
 
   // Close on ESC key
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && resumeModal.classList.contains('active')) {
+    if (e.key === 'Escape' && resumeModal && resumeModal.classList.contains('active')) {
       closeResume();
     }
   });
 
-  // Print / Save as PDF
-  printResumeBtn.addEventListener('click', () => {
-    window.print();
-  });
+  // Native Print / Save as PDF handler
+  function triggerPrintResume() {
+    // Open resume modal first if not already open
+    if (resumeModal && !resumeModal.classList.contains('active')) {
+      openResume();
+    }
+
+    // Ensure body overflow is visible so print engine captures all pages cleanly
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'visible';
+
+    // Small timeout to allow DOM layout reflow
+    setTimeout(() => {
+      window.print();
+
+      // Restore overflow after print dialog closes
+      setTimeout(() => {
+        if (resumeModal && resumeModal.classList.contains('active')) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = prevOverflow || 'auto';
+        }
+      }, 500);
+    }, 100);
+  }
+
+  if (printResumeBtn) {
+    printResumeBtn.addEventListener('click', triggerPrintResume);
+  }
 
   // ==========================================
   // 8. Clipboard Copy Functionality
